@@ -9,7 +9,7 @@ import numpy as np
 from .metrics import QUANTILES
 
 # Pinned from the validation run (research/tune_load.csv) before the test window is scored; None = untuned.
-TUNED_LOAD: dict | None = None
+TUNED_LOAD: dict | None = {"num_leaves": 15, "learning_rate": 0.03, "min_data_in_leaf": 100, "n_estimators": 638}
 
 
 class QuantileModel:

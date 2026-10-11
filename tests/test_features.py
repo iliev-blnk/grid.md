@@ -50,3 +50,19 @@ def test_issue_time_is_nine_local():
     t = f.issue_time(date(2026, 12, 1))
     assert (t.hour, str(t.tz)) == (9, "Europe/Chisinau")
     assert t.tz_convert("UTC").hour == 7
+
+
+def test_solar_slope():
+    import numpy as np
+
+    rng = np.random.default_rng(0)
+    drad = rng.uniform(-300, 300, 200)
+    assert abs(f.solar_slope(-0.4 * drad + rng.normal(0, 5, 200), drad) + 0.4) < 0.02
+    assert np.isnan(f.solar_slope(np.ones(10), np.arange(10.0)))  # < 30 points
+
+
+def test_solar_features_present():
+    rows = f.load_rows(T, date(2025, 5, 14))
+    for c in ("rad_d7", "rad_l1", "drad7", "drad1", "k_solar", "solar_term"):
+        assert c in f.LOAD_FEATURES and c in rows.columns
+    assert rows["k_solar"].nunique() == 1 and rows["k_solar"].iloc[0] < 0  # sunnier than last week -> lower net load
