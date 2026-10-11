@@ -5,8 +5,11 @@ rows), and a reachability workflow run on GitHub Actions.
 
 ## 1. Moldelectrica timestamps
 
-- Local wall-clock time (Europe/Chisinau), labelled at the **end** of each 15-min interval. A
-  request for 2024-01-01..2024-01-02 runs from `2024-01-01 00:15` to `2024-01-03 00:00`.
+- Local wall-clock time (Europe/Chisinau), labelled at the **start** of each 15-min interval:
+  on spring days exactly the `03:00..03:45` labels are missing, which only fits start labels.
+- The archive's date window is half-open. A request for 2024-01-01..2024-01-02 returns the
+  labels `2024-01-01 00:15` … `2024-01-03 00:00`, so each day's `00:00` interval arrives with the
+  previous request. Ingest concatenates and de-duplicates.
 - **Spring change** (2025-03-30, 2026-03-29): the `03:00..03:45` labels are missing, giving a
   23-hour day (91–92 rows).
 - **Autumn change** (2024-10-27, 2025-10-26): the repeated hour appears **once**, so the day has
@@ -53,3 +56,12 @@ rows), and a reachability workflow run on GitHub Actions.
 - If the machine is asleep at 09:00 local, the timer fires on wake, as long as it is still before
   23:00 local on D. The inputs are still cut at 09:00 and the file records the actual
   `issued_at`. Days with no run are gaps in the record, not back-filled.
+
+## 5. Archive gaps
+
+- Hourly table 2021-12-01..2026-10-11: 42,583 hours.
+- Two multi-day outages in the source, which are blank in the archive itself:
+  - 2022-09-23..26: 42 hours;
+  - 2024-11-06..11: 114 hours.
+- All other complete months miss ≤ 4%.
+- Missing hours are dropped from training and left unscored.
