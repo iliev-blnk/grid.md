@@ -19,6 +19,14 @@ def cmd_ingest(args) -> int:
 
         h = build_load(start, end)
         print(f"load: {len(h)} hourly rows {h['day'].min()}..{h['day'].max()}")
+    elif args.what == "weather":
+        from .weather import build_weather
+
+        w = build_weather(max(start, date(2022, 1, 1)), end)
+        print(f"weather: {len(w)} rows, {w['site'].nunique()} sites")
+    else:
+        print("prices: deferred (no source whose licence allows public reuse; see spec amendment 2)")
+        return 2
     return 0
 
 
