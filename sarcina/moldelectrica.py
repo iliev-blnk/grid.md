@@ -12,6 +12,7 @@ import numpy as np
 import pandas as pd
 
 from .http import fetch_bytes
+from .tables import merge_recent, write_atomic
 
 URL = "https://moldelectrica.md/utils/archive2.php?id=table&type=csv&date1={d1}&date2={d2}"
 ROOT = Path(__file__).resolve().parents[1]
@@ -76,15 +77,14 @@ def hourly(df15: pd.DataFrame) -> pd.DataFrame:
     return out[out["n"] == 4]
 
 
-def build_load(start: date, end: date, out: Path | None = None) -> pd.DataFrame:
+def build_load(start: date, end: date, out: Path | None = None, merge: bool = False) -> pd.DataFrame:
     months = pd.period_range(start, end, freq="M")
     frames = [parse_csv(fetch_month(p.year, p.month)) for p in months]
     df = pd.concat(frames).drop_duplicates("ts").sort_values("ts")
     h = hourly(df).reset_index()
     h = h[(h["day"] >= start.isoformat()) & (h["day"] <= end.isoformat())]
     out = out or ROOT / "data" / "load.csv.gz"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    tmp = out.with_suffix(".tmp")
-    h.to_csv(tmp, index=False, compression={"method": "gzip", "mtime": 0})
-    tmp.replace(out)
+    if merge and out.exists():
+        h = merge_recent(pd.read_csv(out), h, key=["day", "hour"])
+    write_atomic(h, out)
     return h

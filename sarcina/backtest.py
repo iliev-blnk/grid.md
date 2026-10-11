@@ -181,7 +181,8 @@ NCOLS = [f"n{int(a * 100):02d}" for a in QUANTILES]
 
 
 def summarize(p: pd.DataFrame, params: dict) -> dict:
-    ok = p["y"].notna()
+    """Scores on hours with an observed target, a model forecast and a naive forecast (lag_d7 exists)."""
+    ok = p["y"].notna() & p[QCOLS].notna().all(axis=1) & p[NCOLS].notna().all(axis=1)
     both = ok & p["plan"].notna() & p["plan_bc"].notna()
 
     def block(mask):
@@ -196,7 +197,8 @@ def summarize(p: pd.DataFrame, params: dict) -> dict:
         }
 
     month = p["issue_date"].astype(str).str[:7]
-    out = {"params": params, "overall": block(both), "all_hours_model": _scores(p.loc[ok, "y"].to_numpy(), p.loc[ok, QCOLS].to_numpy()),
+    out = {"params": params, "hours_scored": int(both.sum()), "hours_without_forecast": int((p["y"].notna() & ~ok).sum()),
+           "overall": block(both), "all_hours_model": _scores(p.loc[ok, "y"].to_numpy(), p.loc[ok, QCOLS].to_numpy()),
            "by_month": {m: block(both & (month == m)) for m in sorted(month.unique())}}
     levels = {f"{a:.2f}": float(np.mean(p.loc[ok, "y"] <= p.loc[ok, c])) for a, c in zip(QUANTILES, QCOLS)}
     out["reliability"] = levels

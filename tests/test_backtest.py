@@ -40,3 +40,16 @@ def test_expanding_refit_never_sees_future():
 def test_rolling_months_start_before_test():
     r = bt.rolling_months()
     assert r[0] == date(2025, 1, 1) and r[-1] == date(2026, 9, 1) and len(r) == 21
+
+
+def test_summarize_skips_rows_without_forecast(tmp_path, monkeypatch):
+    import numpy as np
+
+    monkeypatch.setattr(bt, "RESEARCH", tmp_path)
+    n = 60
+    p = pd.DataFrame({"issue_date": [date(2025, 10, 1)] * n, "y": 500.0, "plan": 520.0, "plan_bc": 505.0})
+    for c in bt.QCOLS + bt.RCOLS + bt.NCOLS:
+        p[c] = 500.0
+    p.loc[0, bt.QCOLS] = np.nan
+    out = bt.summarize(p, {})
+    assert np.isfinite(out["overall"]["model"]["mape"]) and out["overall"]["model"]["n"] == n - 1

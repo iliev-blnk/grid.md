@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 
 from .http import fetch_json
+from .tables import merge_recent, write_atomic
 
 URL = ("https://previous-runs-api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}"
        "&hourly={hourly}&start_date={start}&end_date={end}&timezone=GMT")
@@ -66,12 +67,13 @@ def fetch_site(name: str, start: date, end: date, fetch=fetch_json) -> pd.DataFr
     return df.assign(site=name)
 
 
-def build_weather(start: date, end: date, out: Path | None = None) -> pd.DataFrame:
+def build_weather(start: date, end: date, out: Path | None = None, merge: bool = False) -> pd.DataFrame:
     df = pd.concat([fetch_site(s, start, end) for s in SITES]).reset_index()
+    df["hour_utc"] = df["hour_utc"].astype(str)
     out = out or ROOT / "data" / "weather.csv.gz"
-    tmp = out.with_suffix(".tmp")
-    df.to_csv(tmp, index=False, compression={"method": "gzip", "mtime": 0})
-    tmp.replace(out)
+    if merge and out.exists():
+        df = merge_recent(pd.read_csv(out), df, key=["hour_utc", "site"])
+    write_atomic(df, out)
     return df
 
 
