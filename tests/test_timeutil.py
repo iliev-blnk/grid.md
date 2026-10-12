@@ -1,6 +1,6 @@
 from datetime import date
 
-from sarcina.timeutil import CHISINAU, local_day_hours
+from gridmd.timeutil import CHISINAU, local_day_hours
 
 
 def test_normal_day_has_24_hours():

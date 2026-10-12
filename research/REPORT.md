@@ -1,4 +1,4 @@
-# sarcina backtest — Moldova load, day ahead
+# grid.md backtest — Moldova load, day ahead
 
 **Question.** At 09:00 Moldova time on day D, how well can tomorrow's hourly national
 electricity load be forecast, as a median and as a range, compared with Moldelectrica's own

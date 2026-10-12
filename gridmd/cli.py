@@ -82,7 +82,7 @@ def cmd_score(args) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="sarcina")
+    p = argparse.ArgumentParser(prog="gridmd")
     sub = p.add_subparsers(dest="cmd", required=True)
     i = sub.add_parser("ingest", help="download sources into data/")
     i.add_argument("what", choices=["load", "prices", "weather"])

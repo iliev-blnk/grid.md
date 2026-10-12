@@ -1,6 +1,6 @@
 import pandas as pd
 
-from sarcina.tables import merge_recent
+from gridmd.tables import merge_recent
 
 
 def test_merge_recent_replaces_overlap_and_keeps_old():

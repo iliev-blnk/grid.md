@@ -3,7 +3,7 @@ import urllib.error
 
 import pytest
 
-from sarcina import http
+from gridmd import http
 
 
 def _err(code):

@@ -1,9 +1,0 @@
-[Unit]
-Description=sarcina daily forecast
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=oneshot
-WorkingDirectory=%h/DEV/sarcina
-ExecStart=%h/DEV/sarcina/scripts/daily.sh

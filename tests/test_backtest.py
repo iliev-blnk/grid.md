@@ -2,7 +2,7 @@ from datetime import date
 
 import pandas as pd
 
-from sarcina import backtest as bt
+from gridmd import backtest as bt
 
 
 def fake_ds():

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Daily pipeline (run by the sarcina.timer systemd user unit): refresh data, retrain monthly,
+# Daily pipeline (run by the gridmd.timer systemd user unit): refresh data, retrain monthly,
 # issue tomorrow's forecast inside the 09:00–23:00 window, score finished days, commit and push.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-S=.venv/bin/sarcina
+S=.venv/bin/gridmd
 $S ingest load --recent 14
 $S ingest weather --recent 14
 $S retrain

@@ -5,8 +5,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from sarcina import live
-from sarcina.features import load_tables
+from gridmd import live
+from gridmd.features import load_tables
 
 
 def test_can_issue_window():

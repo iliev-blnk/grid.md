@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from sarcina.forecaster import LoadForecaster, conformal_shift
+from gridmd.forecaster import LoadForecaster, conformal_shift
 
 PARAMS = dict(num_leaves=7, learning_rate=0.1, min_data_in_leaf=20, n_estimators=50)
 

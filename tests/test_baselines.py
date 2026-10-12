@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from sarcina.baselines import bias_corrected_plan, naive_quantiles
+from gridmd.baselines import bias_corrected_plan, naive_quantiles
 
 
 def test_naive_quantiles_shape_and_order():

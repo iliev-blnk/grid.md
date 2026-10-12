@@ -1,6 +1,6 @@
 import numpy as np
 
-from sarcina.metrics import QUANTILES, coverage, mae, mape, pinball
+from gridmd.metrics import QUANTILES, coverage, mae, mape, pinball
 
 
 def test_quantile_levels():

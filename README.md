@@ -1,12 +1,12 @@
-# sarcina
+# grid.md
 
-Every morning at 09:00 Moldova time, a forecast of tomorrow's hourly electricity load in Moldova,
-given as a range rather than one number, and scored against the grid operator's own plan.
-*Sarcina* is Romanian for "load".
+Every morning at 09:00 Moldova time, a forecast of how much electricity Moldova will use
+tomorrow, hour by hour, given as a range rather than one number and checked against the grid
+operator's own plan. The page is in English, Romanian and Russian.
 
-![Tomorrow's load fan with the last three days of actual load and the operator's plan](docs/fan.png)
+![Tomorrow's peak as one big number, with the hour-by-hour range underneath](docs/fan.png)
 
-**Live: [iliev-blnk.github.io/sarcina](https://iliev-blnk.github.io/sarcina/)**
+**Live: [iliev-blnk.github.io/grid.md](https://iliev-blnk.github.io/grid.md/)**
 
 ## Result
 
@@ -15,7 +15,7 @@ beforehand ([full report](research/REPORT.md)):
 
 | | typical error (MAPE) | hours inside the 90% range |
 | --- | ---: | ---: |
-| sarcina | **8.6%** | 88.4% |
+| grid.md | **8.6%** | 88.4% |
 | Moldelectrica's own plan | 18.7% | – |
 | the plan with its recent bias removed | 15.5% | – |
 | same hour last week | 15.0% | 89.1% (range 1.8× wider) |
@@ -55,10 +55,10 @@ beforehand ([full report](research/REPORT.md)):
 
 ```sh
 python -m venv .venv && .venv/bin/pip install -e ".[dev]"
-.venv/bin/sarcina ingest load --from 2021-12-01     # Moldelectrica → data/load.csv.gz
-.venv/bin/sarcina ingest weather --from 2022-01-01  # Open-Meteo → data/weather.csv.gz
-.venv/bin/sarcina backtest dataset|tune|test        # research/
-.venv/bin/sarcina retrain --force && .venv/bin/sarcina forecast --date 2026-10-12
+.venv/bin/gridmd ingest load --from 2021-12-01     # Moldelectrica → data/load.csv.gz
+.venv/bin/gridmd ingest weather --from 2022-01-01  # Open-Meteo → data/weather.csv.gz
+.venv/bin/gridmd backtest dataset|tune|test        # research/
+.venv/bin/gridmd retrain --force && .venv/bin/gridmd forecast --date 2026-10-12
 .venv/bin/pytest -q && pnpm install && pnpm --dir site dev
 deploy/install.sh                                   # the daily systemd user timer
 ```

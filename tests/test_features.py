@@ -4,8 +4,8 @@ from datetime import date, timedelta
 import pandas as pd
 import pytest
 
-from sarcina import features as f
-from sarcina.weather import allowed_lead
+from gridmd import features as f
+from gridmd.weather import allowed_lead
 
 T = f.load_tables()
 

@@ -1,6 +1,6 @@
 from datetime import date
 
-from sarcina.calendar_md import is_bridge, is_holiday
+from gridmd.calendar_md import is_bridge, is_holiday
 
 
 def test_moldovan_holidays():

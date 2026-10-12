@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from sarcina import weather as w
+from gridmd import weather as w
 
 FIX = json.loads((Path(__file__).parent / "fixtures" / "om_prev.json").read_text())
 

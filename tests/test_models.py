@@ -1,6 +1,6 @@
 import numpy as np
 
-from sarcina.models import QuantileModel
+from gridmd.models import QuantileModel
 
 PARAMS = dict(num_leaves=15, learning_rate=0.05, min_data_in_leaf=20, n_estimators=300)
 

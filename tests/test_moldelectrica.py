@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from sarcina import moldelectrica as me
+from gridmd import moldelectrica as me
 
 FIX = Path(__file__).parent / "fixtures"
 
