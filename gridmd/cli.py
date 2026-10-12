@@ -98,6 +98,14 @@ def cmd_solar(args) -> int:
     return 0
 
 
+def cmd_story(args) -> int:
+    from .features import load_tables
+    from .story import write_story
+
+    print(f"story: {write_story(load_tables())}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="gridmd")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -115,8 +123,9 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("score", help="score forecasts whose target day is complete")
     so = sub.add_parser("solar", help="estimate hidden and visible solar capacity by month")
     so.add_argument("--boot", type=int, default=200)
+    sub.add_parser("story", help="write data/story.json for the story page")
     args = p.parse_args(argv)
-    return {"solar": cmd_solar, "ingest": cmd_ingest, "backtest": cmd_backtest, "retrain": cmd_retrain, "forecast": cmd_forecast,
+    return {"story": cmd_story, "solar": cmd_solar, "ingest": cmd_ingest, "backtest": cmd_backtest, "retrain": cmd_retrain, "forecast": cmd_forecast,
             "score": cmd_score}[args.cmd](args)
 
 
