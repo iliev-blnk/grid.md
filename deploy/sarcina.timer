@@ -1,0 +1,10 @@
+[Unit]
+Description=sarcina daily forecast at 09:00 Moldova time (catches up after sleep)
+
+[Timer]
+OnCalendar=*-*-* 09:00:00 Europe/Chisinau
+Persistent=true
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target
