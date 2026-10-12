@@ -204,3 +204,42 @@ def summarize(p: pd.DataFrame, params: dict) -> dict:
     out["reliability"] = levels
     (RESEARCH / "test_load.json").write_text(json.dumps(out, indent=1))
     return out
+
+
+# ---------- figures ----------
+
+def figures(summary: dict) -> None:
+    """Plain SVGs for the report: monthly MAPE (model, plan, bias-corrected plan) and quantile reliability."""
+    out = RESEARCH / "figures"
+    out.mkdir(parents=True, exist_ok=True)
+    months = sorted(summary["by_month"])
+    series = [("model", "#000", ""), ("plan", "#000", "4 3"), ("plan_bias_corrected", "#888", "")]
+    W, H, L, T = 560, 220, 40, 16
+    top = max(summary["by_month"][m][k]["mape"] for m in months for k, *_ in series)
+    top = 10 * (int(top // 10) + 1)
+    x = lambda i: L + i * (W - L - 10) / max(1, len(months) - 1)
+    y = lambda v: T + (1 - v / top) * (H - T - 30)
+    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" font-family="monospace" font-size="10">',
+             f'<rect width="{W}" height="{H}" fill="#fff"/>']
+    for g in range(0, top + 1, 10):
+        parts.append(f'<line x1="{L}" x2="{W - 10}" y1="{y(g):.1f}" y2="{y(g):.1f}" stroke="#ddd"/><text x="4" y="{y(g) + 3:.1f}">{g}%</text>')
+    for i, m in enumerate(months):
+        if i % 2 == 0:
+            parts.append(f'<text x="{x(i) - 14:.1f}" y="{H - 8}">{m}</text>')
+    for k, color, dash in series:
+        pts = [(x(i), y(summary["by_month"][m][k]["mape"])) for i, m in enumerate(months)]
+        parts.append(f'<polyline fill="none" stroke="{color}" stroke-width="1.5" stroke-dasharray="{dash}" points="'
+                     + " ".join(f"{a:.1f},{b:.1f}" for a, b in pts) + '"/>')
+        parts += [f'<circle cx="{a:.1f}" cy="{b:.1f}" r="2.5" fill="{color}"/>' for a, b in pts]
+    parts.append(f'<text x="{L}" y="12">MAPE by month — black: model · dashed: operator plan · grey: bias-corrected plan</text></svg>')
+    (out / "monthly_mape.svg").write_text("".join(parts))
+
+    S = 240
+    r = summary["reliability"]
+    pts = "".join(f'<circle cx="{30 + float(a) * (S - 40):.1f}" cy="{10 + (1 - v) * (S - 40):.1f}" r="3" fill="#000"/>'
+                  for a, v in r.items())
+    (out / "reliability.svg").write_text(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{S}" height="{S}" font-family="monospace" font-size="10">'
+        f'<rect width="{S}" height="{S}" fill="#fff"/><rect x="30" y="10" width="{S - 40}" height="{S - 40}" fill="none" stroke="#000"/>'
+        f'<line x1="30" y1="{S - 30}" x2="{S - 10}" y2="10" stroke="#999" stroke-dasharray="3 3"/>{pts}'
+        f'<text x="30" y="{S - 12}">nominal quantile → share of hours below it</text></svg>')

@@ -53,3 +53,14 @@ def test_summarize_skips_rows_without_forecast(tmp_path, monkeypatch):
     p.loc[0, bt.QCOLS] = np.nan
     out = bt.summarize(p, {})
     assert np.isfinite(out["overall"]["model"]["mape"]) and out["overall"]["model"]["n"] == n - 1
+
+
+def test_figures_write_svgs(tmp_path, monkeypatch):
+    monkeypatch.setattr(bt, "RESEARCH", tmp_path)
+    s = {"by_month": {f"2026-{m:02d}": {k: {"mape": 10.0 + m} for k in ("model", "plan", "plan_bias_corrected", "naive_lastweek")}
+                      for m in range(1, 13)},
+         "reliability": {f"{a:.2f}": a for a in [0.05, 0.1, 0.25, 0.5, 0.75, 0.9, 0.95]}}
+    bt.figures(s)
+    svg = (tmp_path / "figures" / "monthly_mape.svg").read_text()
+    assert svg.startswith("<svg") and svg.count("<circle") == 12 * 3
+    assert (tmp_path / "figures" / "reliability.svg").read_text().count("<circle") == 7
