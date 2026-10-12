@@ -25,6 +25,31 @@ beforehand ([full report](research/REPORT.md)):
   tomorrow's sunshine follows it.
 - In winter the operator's plan is as good as or slightly better than the model.
 
+## Moldova's hidden solar
+
+Moldelectrica's load is net of any solar it does not meter, so sunny days pull midday load down.
+Measuring how far, month by month, gives the solar the grid operator cannot see. The result for
+May–September 2026 is **≈668 MW** (range 557–814), plus ~184 MW that it does meter. The official
+figure for rooftop prosumers is 195 MW. The estimate matches CNED's national total almost
+exactly at the end of 2024 (391 vs 394 MW) and is ~20% low at the end of 2025. The
+pre-registered first version failed that check; the report shows both versions and why:
+[`research/SOLAR.md`](research/SOLAR.md).
+
+## The story
+
+[**Moldova's grid, 2021–2026**](https://iliev-blnk.github.io/grid.md/story.html), in seven
+numbers, each with its chart:
+
+1. 97% from one power station before the war.
+2. 290 MW at 15:00 on the day of the November 2022 blackout.
+3. 80% of the hours of 2023 as a corridor from Romania to Ukraine.
+4. Cuciurgan falling to 222 MW after the gas cutoff.
+5. The midday dip deepening from 1.05× to 0.50× of the evening.
+6. The hidden solar.
+7. Tomorrow's forecast.
+
+English, Romanian and Russian, like the main page.
+
 ## How it works
 
 - **Data:**
