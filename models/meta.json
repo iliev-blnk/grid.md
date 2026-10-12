@@ -1,0 +1,11 @@
+{
+ "trained_on": "2026-10-12",
+ "train_end_day": "2026-10-11",
+ "rows": 41239,
+ "params": {
+  "num_leaves": 15,
+  "learning_rate": 0.03,
+  "min_data_in_leaf": 100,
+  "n_estimators": 638
+ }
+}
