@@ -86,6 +86,18 @@ def cmd_score(args) -> int:
     return 0
 
 
+def cmd_solar(args) -> int:
+    from .features import load_tables
+    from .solar import load_era5, monthly, subtract_baseline, write_monthly
+
+    t, e = load_tables(), load_era5()
+    v1 = monthly(t, e, boot=args.boot, irr="ghi")
+    print(f"solar v1 (pre-registered): {len(v1)} months -> {write_monthly(v1)}")
+    v2 = subtract_baseline(monthly(t, e, boot=args.boot, irr="gti"))
+    print(f"solar v2 (tilted plane, minus 2022 sunshine response): -> {write_monthly(v2, name='solar_monthly_v2.json')}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="gridmd")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -101,8 +113,10 @@ def main(argv: list[str] | None = None) -> int:
     fc.add_argument("--date", help="issue date D (forecasts D+1)")
     fc.add_argument("--force", action="store_true")
     sub.add_parser("score", help="score forecasts whose target day is complete")
+    so = sub.add_parser("solar", help="estimate hidden and visible solar capacity by month")
+    so.add_argument("--boot", type=int, default=200)
     args = p.parse_args(argv)
-    return {"ingest": cmd_ingest, "backtest": cmd_backtest, "retrain": cmd_retrain, "forecast": cmd_forecast,
+    return {"solar": cmd_solar, "ingest": cmd_ingest, "backtest": cmd_backtest, "retrain": cmd_retrain, "forecast": cmd_forecast,
             "score": cmd_score}[args.cmd](args)
 
 

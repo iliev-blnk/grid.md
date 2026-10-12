@@ -8,7 +8,8 @@ FIX = json.loads((Path(__file__).parent / "fixtures" / "era5_sample.json").read_
 
 def test_parse_archive():
     df = era5.parse_archive(FIX)
-    assert list(df.columns) == ["ghi", "temp", "cloud", "wind100"]
+    assert list(df.columns) == ["ghi", "gti", "temp", "cloud", "wind100"]
+    assert df["gti"].max() > 0
     assert len(df) == 48 and str(df.index.tz) == "UTC"
     assert df["ghi"].max() > 500 and df["ghi"].min() == 0
 

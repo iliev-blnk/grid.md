@@ -11,7 +11,8 @@ from .http import fetch_json
 from .tables import merge_recent, write_atomic
 
 URL = ("https://archive-api.open-meteo.com/v1/archive?latitude={lat}&longitude={lon}&start_date={start}"
-       "&end_date={end}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_100m&timezone=GMT")
+       "&end_date={end}&hourly=shortwave_radiation,temperature_2m,cloud_cover,wind_speed_100m,global_tilted_irradiance"
+       "&tilt=30&azimuth=0&timezone=GMT")  # tilted plane: 30°, facing south (Open-Meteo azimuth 0 = south)
 ERA5_SITES: dict[str, tuple[float, float]] = {
     "chisinau": (47.01, 28.86), "balti": (47.76, 27.93), "cahul": (45.90, 28.19),
     "ungheni": (47.21, 27.80), "comrat": (46.30, 28.66), "soroca": (48.16, 28.30),
@@ -24,6 +25,7 @@ def parse_archive(js: dict) -> pd.DataFrame:
     h = js["hourly"]
     df = pd.DataFrame({
         "ghi": pd.Series(h["shortwave_radiation"], dtype=float).to_numpy(),
+        "gti": pd.Series(h.get("global_tilted_irradiance", [None] * len(h["time"])), dtype=float).to_numpy(),
         "temp": pd.Series(h["temperature_2m"], dtype=float).to_numpy(),
         "cloud": pd.Series(h["cloud_cover"], dtype=float).to_numpy(),
         "wind100": pd.Series(h["wind_speed_100m"], dtype=float).to_numpy(),

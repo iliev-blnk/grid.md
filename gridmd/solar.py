@@ -37,19 +37,20 @@ def load_era5(root: Path = ROOT) -> pd.DataFrame:
     return e
 
 
-def national(era5: pd.DataFrame, pr: float = PR) -> pd.DataFrame:
-    """Per UTC stamp: mean PV yield, mean wind-power proxy and mean temperature over the sites."""
+def national(era5: pd.DataFrame, pr: float = PR, irr: str = "ghi") -> pd.DataFrame:
+    """Per UTC stamp: mean PV yield, mean wind-power proxy and mean temperature over the sites.
+    irr="ghi" uses horizontal irradiance (v1); irr="gti" uses a 30° south-facing plane (v2)."""
     e = era5.copy()
-    e["yield"] = pv_yield(e["ghi"], e["temp"], pr)
+    e["yield"] = pv_yield(e[irr], e["temp"], pr)
     e["wind"] = np.clip((e["wind100"] / 3.6 / 12) ** 3, 0, 1)
     return e.groupby("hour_utc")[["yield", "wind", "temp"]].mean()
 
 
-def load_frame(tables: Tables, era5: pd.DataFrame, pr: float = PR) -> pd.DataFrame:
+def load_frame(tables: Tables, era5: pd.DataFrame, pr: float = PR, irr: str = "ghi") -> pd.DataFrame:
     """One row per local hour: load, metered RES and the weather of that hour.
     ERA5 radiation at stamp S is the mean over the hour ending at S, so local hour h (starting at
     valid_utc) is matched to the stamp valid_utc + 1 h."""
-    n = national(era5, pr)
+    n = national(era5, pr, irr)
     L = tables.load.reset_index()[["day", "hour", "load", "res"]]
     stamps = [valid_utc(pd.Timestamp(d).date(), int(h)) + pd.Timedelta(hours=1) for d, h in zip(L["day"], L["hour"])]
     w = n.reindex(pd.DatetimeIndex(stamps))
@@ -102,7 +103,7 @@ def estimate_hidden(f: pd.DataFrame, boot: int = BOOT, seed: int = 7) -> dict | 
         pick = rng.choice(days, len(days), replace=True)
         parts = [groups[d].assign(day=f"{d}#{i}") for i, d in enumerate(pick)]
         draws.append(_fit(pd.concat(parts, ignore_index=True))[0])
-    lo, hi = np.percentile(draws, [5, 95])
+    lo, hi = np.percentile(draws, [5, 95]) if draws else (C, C)
     return {"C": C, "lo": float(lo), "hi": float(hi), "rss": rss, "n_days": len(days)}
 
 
@@ -115,8 +116,8 @@ def estimate_visible(f: pd.DataFrame) -> dict | None:
     return {"C": float(beta[1]), "wind_coef": float(beta[2])}
 
 
-def monthly(tables: Tables, era5: pd.DataFrame, boot: int = BOOT) -> list[dict]:
-    frames = {pr: load_frame(tables, era5, pr) for pr in (PR, *PR_BAND)}
+def monthly(tables: Tables, era5: pd.DataFrame, boot: int = BOOT, irr: str = "ghi") -> list[dict]:
+    frames = {pr: load_frame(tables, era5, pr, irr) for pr in (PR, *PR_BAND)}
     out = []
     base = frames[PR]
     for m in sorted(base["day"].str[:7].unique()):
@@ -136,7 +137,20 @@ def monthly(tables: Tables, era5: pd.DataFrame, boot: int = BOOT) -> list[dict]:
     return out
 
 
-def write_monthly(rows: list[dict], root: Path = ROOT) -> Path:
-    p = root / "data" / "solar_monthly.json"
+def subtract_baseline(rows: list[dict], base_from: str = "2021-12", base_to: str = "2022-11") -> list[dict]:
+    """v2: remove the demand response to sunshine (lights, heating) measured before the solar boom.
+    For each month, subtract the C found in the same calendar month of the baseline year."""
+    base = {r["month"][5:]: r["hidden"]["C"] for r in rows if base_from <= r["month"] <= base_to}
+    out = []
+    for r in rows:
+        b = base.get(r["month"][5:])
+        net = None if b is None or r["month"] <= base_to else {
+            k: round(r["hidden"][k] - b, 1) for k in ("C", "lo", "hi")}
+        out.append({**r, "baseline": b, "hidden_net": net})
+    return out
+
+
+def write_monthly(rows: list[dict], root: Path = ROOT, name: str = "solar_monthly.json") -> Path:
+    p = root / "data" / name
     p.write_text(json.dumps(rows, indent=1))
     return p

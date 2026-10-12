@@ -70,3 +70,23 @@ def test_visible_recovers_planted(june):
     s["res"] = 5 + 120 * s["yield"] + 40 * s["wind"] + rng.normal(0, 2, len(s))
     r = solar.estimate_visible(s)
     assert abs(r["C"] - 120) < 6
+
+
+def test_no_bootstrap_gives_point_interval(june):
+    r = solar.estimate_hidden(synth(june, 300), boot=0)
+    assert r["lo"] == r["C"] == r["hi"]
+
+
+def test_frame_can_use_tilted_irradiance(june):
+    f = solar.load_frame(T, E, irr="gti")
+    j = f[f["day"].str.startswith("2026-06")]
+    assert j["yield"].max() > 0 and not np.allclose(j["yield"].to_numpy(), june["yield"].to_numpy())
+
+
+def test_subtract_baseline_by_calendar_month():
+    rows = [{"month": "2022-01", "hidden": {"C": 120.0, "lo": 0, "hi": 200}},
+            {"month": "2025-01", "hidden": {"C": 520.0, "lo": 400, "hi": 640}},
+            {"month": "2025-02", "hidden": {"C": 300.0, "lo": 200, "hi": 400}}]
+    out = solar.subtract_baseline(rows, base_from="2021-12", base_to="2022-11")
+    assert out[1]["hidden_net"]["C"] == 400.0 and out[1]["hidden_net"]["lo"] == 280.0
+    assert out[2]["hidden_net"] is None  # no February in the baseline year
