@@ -1,5 +1,5 @@
 /** Build public/data/site.json: the latest forecast, the last 7 days of load + plan, all scores. */
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { gunzipSync } from "node:zlib";
 
@@ -24,5 +24,6 @@ const recent = csv.slice(1).map((l) => l.split(",")).filter((p) => p[iDay] >= fi
   .map((p) => ({ day: p[iDay], hour: Number(p[iHour]), load: p[iLoad] === "" ? null : Number(p[iLoad]), plan: p[iPlan] === "" ? null : Number(p[iPlan]) }));
 
 const issued = forecasts.map((f) => ({ day: f.target_day, issued_at: f.issued_at, late: f.late }));
+copyFileSync(join(root, "data", "story.json"), join(out, "story.json"));
 writeFileSync(join(out, "site.json"), JSON.stringify({ latest, recent, scores, issued }));
 console.log(`collect: latest ${latest.target_day}, ${recent.length} recent hours, ${scores.length} scores`);

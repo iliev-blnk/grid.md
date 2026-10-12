@@ -48,3 +48,20 @@ td:first-child, th:first-child { text-align: left; }
 th { color: var(--muted); }
 footer { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
 @media (max-width: 520px) { .range { font-size: 17px; } }
+
+/* story page */
+.mark { text-decoration: none; }
+.story h1 { font-size: 22px; font-weight: 500; margin: 0 0 6px; text-wrap: balance; }
+.story #intro p { margin: 0; max-width: 62ch; color: var(--muted); }
+.chapter { display: grid; gap: 6px; padding: 26px 0 8px; border-top: 1px solid var(--line); }
+.chapter .label { font: 500 13px var(--mono); color: var(--muted); margin: 0; }
+.chapter .num { font-size: clamp(72px, 13vw, 140px); margin: 2px 0 2px; }
+.chapter p.text { margin: 0; max-width: 62ch; }
+.chapter .chart svg { width: 100%; height: auto; display: block; margin-top: 8px; overflow: visible; }
+.chapter .chart text { font-family: var(--body); font-size: 12px; fill: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+.legend i { display: inline-block; width: 18px; height: 0; border-top: 2.5px solid; vertical-align: middle; margin-right: 6px; }
+.legend i.dash { border-top-style: dashed; }
+.cta { display: inline-block; margin-top: 8px; font-weight: 500; }
+.storylink { font-weight: 500; }
+.legend b.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--fg); margin-right: 6px; vertical-align: middle; }

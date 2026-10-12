@@ -23,6 +23,7 @@ export interface Strings {
   linkForecasts: string;
   linkCode: string;
   credits: string;
+  storyLink: string;
 }
 
 export const STRINGS: Record<Lang, Strings> = {
@@ -48,6 +49,7 @@ export const STRINGS: Record<Lang, Strings> = {
     linkForecasts: "All past forecasts",
     linkCode: "Source code",
     credits: "Data: Moldelectrica, Open-Meteo.",
+    storyLink: "Moldova's grid, 2021–2026: seven numbers",
   },
   ro: {
     locale: "ro-RO",
@@ -71,6 +73,7 @@ export const STRINGS: Record<Lang, Strings> = {
     linkForecasts: "Toate prognozele",
     linkCode: "Cod sursă",
     credits: "Date: Moldelectrica, Open-Meteo.",
+    storyLink: "Rețeaua Moldovei, 2021–2026: șapte cifre",
   },
   ru: {
     locale: "ru-RU",
@@ -94,6 +97,7 @@ export const STRINGS: Record<Lang, Strings> = {
     linkForecasts: "Все прогнозы",
     linkCode: "Исходный код",
     credits: "Данные: Moldelectrica, Open-Meteo.",
+    storyLink: "Энергосистема Молдовы, 2021–2026: семь цифр",
   },
 };
 

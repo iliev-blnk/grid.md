@@ -48,7 +48,7 @@ function render(d: Data, lang: Lang) {
   const issued = new Date(f.issued_at).toLocaleString(s.locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Chisinau" });
   const pk = peak(f.hours, f.q);
   $("langs").innerHTML = LANGS.map((l) => `<button type="button" data-lang="${l}" aria-pressed="${l === lang}" title="${STRINGS[l].langName}">${l.toUpperCase()}</button>`).join("");
-  $("tldr").innerHTML = `<p><b>${s.tldrTitle}.</b> ${s.tldr}</p>`;
+  $("tldr").innerHTML = `<p><b>${s.tldrTitle}.</b> ${s.tldr}</p><p><a class="storylink" href="story.html">${s.storyLink} →</a></p>`;
   $("hero").innerHTML =
     `<p class="kick">${s.kicker(day, hh(pk.hour))}</p>` +
     `<div class="num">${Math.round(pk.median)}<small>${s.unit}</small></div>` +

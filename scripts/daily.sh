@@ -9,7 +9,12 @@ $S ingest weather --recent 14
 $S retrain
 $S forecast
 $S score
-git add data/load.csv.gz data/weather.csv.gz forecasts scores models
+if [ "$(TZ=Europe/Chisinau date +%d)" = "01" ]; then  # monthly: refresh hidden solar and the story numbers
+  $S ingest era5 --recent 45
+  $S solar
+  $S story
+fi
+git add data/load.csv.gz data/weather.csv.gz forecasts scores models data/era5.csv.gz data/solar_monthly.json data/solar_monthly_v2.json data/story.json
 if ! git diff --cached --quiet; then
   git commit -q -m "Daily update $(TZ=Europe/Chisinau date +%F)"
   git pull --rebase -q
