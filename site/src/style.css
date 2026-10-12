@@ -1,0 +1,25 @@
+:root {
+  --fg: #000;
+  --bg: #fff;
+  --muted: #6b6b6b;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg);
+  background: var(--bg);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+main { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+a { color: inherit; }
+p { margin: 0 0 4px; }
+.muted { color: var(--muted); }
+header { margin-bottom: 18px; }
+nav a { margin-right: 14px; }
+#fan svg { width: 100%; height: auto; display: block; margin: 8px 0 14px; }
+svg text { font-family: inherit; font-size: 10px; fill: var(--muted); }
+#summary { margin-bottom: 26px; }
+table { border-collapse: collapse; }
+td, th { padding: 2px 14px 2px 0; text-align: right; font-weight: 400; white-space: nowrap; }
+td:first-child, th:first-child { text-align: left; }
+th { color: var(--muted); }

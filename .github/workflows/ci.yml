@@ -14,3 +14,11 @@ jobs:
           python-version: "3.14"
       - run: pip install -e ".[dev]"
       - run: pytest -q
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.3.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --dir site typecheck && pnpm --dir site test && pnpm --dir site build
