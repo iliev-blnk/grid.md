@@ -65,3 +65,22 @@ rows), and a reachability workflow run on GitHub Actions.
   - 2024-11-06..11: 114 hours.
 - All other complete months miss ≤ 4%.
 - Missing hours are dropped from training and left unscored.
+
+## 6. Cross-border flow signs
+
+- `balance ≈ md_ua + md_ro` on 94.6% of hours (within 5 MW), and `balance ≈ load − gen` on
+  93.2%.
+- **Positive = power flowing into Moldova.**
+- Yearly means, MD–UA / MD–RO, MW: 2022 −120 / +224; 2023 −238 / +243; 2024 −226 / +255;
+  2025 −24 / +357; 2026 −245 / +555.
+- **Moldova is a corridor.** The share of hours importing from Romania while exporting to
+  Ukraine: 56% (2022), 79% (2023), 74% (2024), 49% (2025), 74% (2026).
+
+## 7. The blackout of 23 November 2022
+
+- Hourly load that day: 851–884 MW from 09:00 to 13:00, 724 MW at 14:00, **290 MW at 15:00**,
+  then 405 / 440 / 600 MW and back to 715 MW by 19:00.
+- Both border flows fell to almost zero in the 15:00 hour (MD–UA +24, MD–RO +12, against −365 /
+  +1,005 an hour earlier): the system was cut off from its neighbours.
+- That morning, Moldova was carrying up to ~1,100 MW in from Romania and ~830 MW out to Ukraine.
+- These are hourly means, so the true 15-minute low was deeper.

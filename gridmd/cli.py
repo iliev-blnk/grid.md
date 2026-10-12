@@ -25,6 +25,11 @@ def cmd_ingest(args) -> int:
 
         w = build_weather(max(start, date(2022, 1, 1)), end, merge=bool(args.recent))
         print(f"weather: {len(w)} rows, {w['site'].nunique()} sites")
+    elif args.what == "era5":
+        from .era5 import build_era5
+
+        e = build_era5(start, date.today(), merge=bool(args.recent))
+        print(f"era5: {len(e)} rows, {e['site'].nunique()} sites, nulls {e['ghi'].isna().mean():.2%}")
     else:
         print("prices: deferred (no source whose licence allows public reuse; see spec amendment 2)")
         return 2
@@ -85,7 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="gridmd")
     sub = p.add_subparsers(dest="cmd", required=True)
     i = sub.add_parser("ingest", help="download sources into data/")
-    i.add_argument("what", choices=["load", "prices", "weather"])
+    i.add_argument("what", choices=["load", "prices", "weather", "era5"])
     i.add_argument("--from", dest="from_", default="2021-12-01")
     i.add_argument("--recent", type=int, default=0, help="only the last N days (merged into the existing table)")
     b = sub.add_parser("backtest", help="build the dataset, tune on validation, or test once")
