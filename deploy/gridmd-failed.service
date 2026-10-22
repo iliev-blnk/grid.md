@@ -1,0 +1,6 @@
+[Unit]
+Description=grid.md daily forecast failure alert
+
+[Service]
+Type=oneshot
+ExecStart=%h/DEV/grid.md/deploy/notify-failure.sh

@@ -2,6 +2,7 @@
 Description=grid.md daily forecast
 After=network-online.target
 Wants=network-online.target
+OnFailure=gridmd-failed.service
 
 [Service]
 Type=oneshot
