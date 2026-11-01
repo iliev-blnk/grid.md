@@ -1,7 +1,7 @@
 {
- "trained_on": "2026-10-12",
- "train_end_day": "2026-10-11",
- "rows": 41239,
+ "trained_on": "2026-11-01",
+ "train_end_day": "2026-10-31",
+ "rows": 41709,
  "params": {
   "num_leaves": 15,
   "learning_rate": 0.03,
